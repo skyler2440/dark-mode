@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { expression } from "@babel/template";
 
-export const useLocalStorage = (key, initialValue) => {
-    if (typeof key !== "string")
-      throw new Error("Invalid parameters: useLocalStorage(key, value)");
-  
-    const [storedValue, setStoredValue] = useState(() => {
-      console.log(`useLocalStorage:useState`);
-      const item = localStorage.getItem(key);
-      console.log(`useLocalStorage:useState`, key, initialValue, item);
-      return item ? JSON.parse(item) : initialValue;
-    });
-    const setValue = value => {
-      setStoredValue(value);
-      console.log(`useLocalStorage:useState:`, value);
-      localStorage.setItem(key, JSON.stringify(value));
-    };
-    return [storedValue, setValue]};
+const useLocalStorage = (key, initialValue) => {
+  const [storedValue, setStoredValue] = useState(() => {
+    const item = window.localStorage.getItem(key);
+    // if (item) {
+    //     return JSON.parse(item);
+    // }else {
+    //     return initialValue;
+    // }
+    return item ? JSON.parse(item) : initialValue;
+  });
+  const setValue = value => {
+    setStoredValue(value);
+    window.localStorage.setItem(key, JSON.stringify(value));
+  };
+  return [storedValue, setValue];
+};
+
+export default useLocalStorage;
